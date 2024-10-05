@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content%}
+<form action="{{ url_for('login') }}" method="POST">
+    {{ formulario.csrf_token }}
+    <div class="form-group">
+        <label>Nome</label>
+        {{ formulario.nome() }}
+        {% if formulario.errors.nome %}
+        {{ formulario.errors.nome }}
+        {% endif%}
+    </div>
+    <div class="form-group">
+        <label>Senha</label>
+        {{ formulario.password() }}
+        {% if formulario.errors.password %}
+        {{ formulario.errors.password }}
+        {% endif%}
+    </div>
+    <div class="checkbox">
+        <label>
+            {{ formulario.remember }} Lembrar
+        </label>
+    </div>
+    <button type="submit">Entrar</button>
+</form>
+{% endblock%}

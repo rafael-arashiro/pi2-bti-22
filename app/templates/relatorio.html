@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+<script src="/static/js/script.js"></script>
+{% block content%}
+<p>Bem vindo(a), {{ nome }}.<p>
+<h2>Relatórios</h2>
+{% if admin == True %}
+    {% if grupoPessoas %}
+<p><table>
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>Nome</th>
+            <th>Password</th>
+            <th>Telefone</th>
+            <th>admin</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for pessoa in grupoPessoas %}
+        <tr>
+            <td>{{ pessoa[0] }}</td>
+            <td>{{ pessoa[1] }}</td>
+            <td>{{ pessoa[2] }}</td>
+            <td>{{ pessoa[3] }}</td>
+            <td>{{ pessoa[4] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table></p>
+    {% else %}
+<p>Não há pessoas.</p>
+    {% endif %}
+<p>
+    <div class="form-group">
+        <label>Filtrar por tarefa</label>
+        <select id="selectLocal">
+            {% for tarefa in grupoTarefasAdmin %}
+            <option>{{ tarefa[3] }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Filtrar por data</label>
+        <select>
+            {% for tarefa in grupoTarefasAdmin %}
+            <option>{{ tarefa[4] }}</option>
+            {% endfor %}
+        </select>
+    </div>
+</p>
+
+    {% if grupoTarefasAdmin %}
+<p><table>
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>Tarefa</th>
+            <th>Nome</th>
+            <th>Local</th>
+            <th>Data</th>
+            <th>Hora</th>
+            <th>Envio de mensagem</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for tarefa in grupoTarefasAdmin %}
+        <tr id="{{ tarefa[3] }}" name="{{ tarefa[4] }}">
+            <td>{{ tarefa[0] }}</td>
+            <td>{{ tarefa[1] }}</td>
+            <td>{{ tarefa[2] }}</td>
+            <td><a href="https://www.google.com/maps/search/?api=1&query={{ defLocal(tarefa[3]) }}" target=”_blank”>{{ tarefa[3] }}</a></td>
+            <td>{{ tarefa[4] }}</td>
+            <td>{{ tarefa[5] }}</td>
+            <td><a href="https://wa.me//{{ tarefa[6] }}?text={{ mensagem }}">Enviar lembrete</a></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table></p>
+    {% else %}
+<p>Não há tarefas.</p>
+    {% endif %}
+
+{% else %}
+<p>Tarefas de {{ nome }}</p>
+    {% if grupoTarefas %}
+<p><table>
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>Tarefa</th>
+            <th>Nome</th>
+            <th>Local</th>
+            <th>Data</th>
+            <th>Hora</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for tarefa in grupoTarefas %}
+        <tr>
+            <td>{{ tarefa[0] }}</td>
+            <td>{{ tarefa[1] }}</td>
+            <td>{{ tarefa[2] }}</td>
+            <td><a href="https://www.google.com/maps/search/?api=1&query={{ defLocal(tarefa[3]) }}" target=”_blank”>{{ tarefa[3] }}</a></td>
+            <td>{{ tarefa[4] }}</td>
+            <td>{{ tarefa[5] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table></p>
+    {% else %}
+<p>Não há tarefas.</p>
+    {% endif %}
+{% endif %}
+
+<p><a href="{{ url_for('entrada') }}">Voltar para página inicial</a></p>
+{% endblock%}

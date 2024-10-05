@@ -1,0 +1,80 @@
+{% extends 'base.html' %}
+
+{% block content%}
+<p>Bem vindo(a), {{ nome }}.<p>
+<h2>Cadastro de Pessoas</h2>
+
+{% if grupoPessoas %}
+<p><table>
+    <thead>
+        <tr>
+            <th>id</th>
+            <th>Nome</th>
+            <th>Password</th>
+            <th>Telefone</th>
+            <th>admin</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for pessoa in grupoPessoas %}
+        <tr>
+            <td>{{ pessoa[0] }}</td>
+            <td>{{ pessoa[1] }}</td>
+            <td>{{ pessoa[2] }}</td>
+            <td>{{ pessoa[3] }}</td>
+            <td>{{ pessoa[4] }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table></p>
+{% else %}
+<p>Não há pessoas.</p>
+{% endif %}
+
+<p>
+<form action="{{ url_for('cadastroPessoa') }}" method="POST">
+    {{ cadastro_pessoa.csrf_token }}
+    <div class="form-group">
+        <label>Nome</label>
+        {{ cadastro_pessoa.nome() }}
+        {% if cadastro_pessoa.errors.nome %}
+        {{ cadastro_pessoa.errors.nome }}
+        {% endif%}
+    </div>
+    <div class="form-group">
+        <label>Senha</label>
+        {{ cadastro_pessoa.password() }}
+        {% if cadastro_pessoa.errors.password %}
+        {{ cadastro_pessoa.errors.password }}
+        {% endif%}
+    </div>
+    <div class="form-group">
+        <label>Telefone</label>
+        {{ cadastro_pessoa.telefone() }}
+        {% if cadastro_pessoa.errors.telefone %}
+        {{ cadastro_pessoa.errors.telefone }}
+        {% endif%}
+    </div>
+    <div class="checkbox">
+        <label>
+            {{ cadastro_pessoa.admin }} admin
+        </label>
+    </div>
+    <button type="submit">Cadastrar Pessoa</button>
+</form>
+</p>
+<p>
+<form action="{{ url_for('apagarPessoa') }}" method="POST">
+    {{ apagar_pessoa.csrf_token }}
+    <div class="form-group">
+        <label>id do Nome</label>
+        {{ apagar_pessoa.id() }}
+        {% if apagar_pessoa.errors.id %}
+        {{ apagar_pessoa.errors.id }}
+        {% endif%}
+    </div>
+    <button type="submit">Apagar Pessoa</button>
+</form>
+</p>
+<p><a href="{{ url_for('entrada') }}">Voltar para página inicial</a></p>
+{% endblock%}

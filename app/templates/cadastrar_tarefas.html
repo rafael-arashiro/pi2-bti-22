@@ -68,6 +68,43 @@
     <button type="submit">Cadastrar Tarefa</button>
 </form>
 </p>
+
+<p>
+<form action="{{ url_for('atualizarTarefa') }}" method="POST">
+    {{ cadastro_tarefa.csrf_token }}
+    <div class="form-group">
+        <label>Tarefa</label>
+        {{ atualizar_tarefa.tarefa() }}
+        {% if atualizar_tarefa.errors.tarefa %}
+        {{ atualizar_tarefa.errors.tarefa }}
+        {% endif%}
+    </div>
+    <div class="form-group">
+        <label>Local</label>
+        {{ atualizar_tarefa.local() }}
+        {% if atualizar_tarefa.errors.local %}
+        {{ atualizar_tarefa.errors.local }}
+        {% endif%}
+    </div>
+    <div class="form-group">
+        <label>Data</label>
+        {{ atualizar_tarefa.data() }}
+        {% if atualizar_tarefa.errors.data %}
+        {{ atualizar_tarefa.errors.data }}
+        {% endif%}
+    </div>
+    <div class="form-group">
+        <label>Hora</label>
+        {{ atualizar_tarefa.hora() }}
+        {% if atualizar_tarefa.errors.hora %}
+        {{ atualizar_tarefa.errors.hora }}
+        {% endif%}
+    </div>
+
+    <button type="submit">Atualizar Tarefa</button>
+</form>
+</p>
+
 <p>
 <form action="{{ url_for('pessoaTarefa') }}" method="POST">
     {{ pessoas_tarefas.csrf_token }}
@@ -86,38 +123,18 @@
         {% endif%}
     </div>
 
-    <button type="submit">Colocar Pessoa na Tarefa</button>
+    <button type="submit" name="direcionar" value="colocar">Colocar Pessoa na Tarefa</button>
+    <button type="submit" name="direcionar" value="tirar">Retirar Pessoa da Tarefa</button>
 </form>
 </p>
-<p>
-    <form action="{{ url_for('apagarPessoaTarefa') }}" method="POST">
-        {{ pessoas_tarefas.csrf_token }}
-        <div class="form-group">
-            <label>Nome</label>
-            {{ pessoas_tarefas.pessoa_id() }}
-            {% if pessoas_tarefas.errors.pessoa_id %}
-            {{ pessoas_tarefas.errors.pessoa_id }}
-            {% endif%}
-        </div>
-        <div class="form-group">
-            <label>Tarefa</label>
-            {{ pessoas_tarefas.tarefa_id() }}
-            {% if pessoas_tarefas.errors.tarefa_id %}
-            {{ pessoas_tarefas.errors.tarefa_id }}
-            {% endif%}
-        </div>
-    
-        <button type="submit">Retirar Pessoa da Tarefa</button>
-    </form>
-    </p>
 <p>
 <form action="{{ url_for('apagarTarefa') }}" method="POST">
     {{ apagar_tarefa.csrf_token }}
     <div class="form-group">
-        <label>id da Tarefa</label>
-        {{ apagar_tarefa.id() }}
-        {% if apagar_tarefa.errors.id %}
-        {{ apagar_tarefa.errors.id }}
+        <label>Tarefa</label>
+        {{ apagar_tarefa.tarefa_id() }}
+        {% if apagar_tarefa.errors.tarefa_id %}
+        {{ apagar_tarefa.errors.tarefa_id }}
         {% endif%}
     </div>
     <button type="submit">Apagar Tarefa</button>

@@ -1,7 +1,36 @@
 body {
   background: lightcyan;
-  font-size: 18px;
+  font-size: 24px;
   margin-bottom:50px;
+}
+
+@font-face {
+  font-family: 'opendyslexic';
+  src: "OpenDyslexic-Regular.woff";
+  font-style: normal;
+  font-weight: normal;
+}
+
+
+@font-face {
+	font-family: 'opendyslexic';
+	src: url('static/OpenDyslexic/OpenDyslexic-Italic.ttf');
+	font-style: italic;
+	font-weight: normal;
+}
+
+@font-face {
+	font-family: 'opendyslexic';
+	src: url('static/OpenDyslexic/OpenDyslexic-Bold.ttf');
+	font-weight: bold;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: 'opendyslexic';
+	src: url('static/OpenDyslexic/OpenDyslexic-BoldItalic.ttf');
+	font-weight: bold;
+	font-style: italic;
 }
 
 form {
@@ -11,11 +40,13 @@ form {
   text-align: center;
   padding: 15px;
   width: 80%;
+  font-size: 24px;
 }
 
 table {
   border-collapse: collapse;
   width: 80%;
+  font-size: 24px;
 }
 
 table td, table th {
@@ -62,5 +93,5 @@ h2 {
 }
 
 p {
-  font-size: 18px;
+  font-size: 24px;
 }

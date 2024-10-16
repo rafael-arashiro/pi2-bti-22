@@ -63,17 +63,51 @@
     <button type="submit">Cadastrar Pessoa</button>
 </form>
 </p>
+
+<p>
+<form action="{{ url_for('atualizarPessoa') }}" method="POST">
+    {{ cadastro_pessoa.csrf_token }}
+    <div class="form-group">
+        <label>Nome</label>
+        {{ atualizar_pessoa.nome() }}
+        {% if atualizar_pessoa.errors.nome %}
+        {{ atualizar_pessoa.errors.nome }}
+        {% endif%}
+    </div>
+    <div class="form-group">
+        <label>Senha</label>
+        {{ atualizar_pessoa.password() }}
+        {% if atualizar_pessoa.errors.password %}
+        {{ atualizar_pessoa.errors.password }}
+        {% endif%}
+    </div>
+    <div class="form-group">
+        <label>Telefone</label>
+        {{ atualizar_pessoa.telefone() }}
+        {% if atualizar_pessoa.errors.telefone %}
+        {{ atualizar_pessoa.errors.telefone }}
+        {% endif%}
+    </div>
+    <div class="checkbox">
+        <label>
+            {{ atualizar_pessoa.admin }} admin
+        </label>
+    </div>
+    <button type="submit">Atualizar Cadastro de Pessoa</button>
+</form>
+</p>
+
 <p>
 <form action="{{ url_for('apagarPessoa') }}" method="POST">
     {{ apagar_pessoa.csrf_token }}
     <div class="form-group">
-        <label>id do Nome</label>
-        {{ apagar_pessoa.id() }}
-        {% if apagar_pessoa.errors.id %}
-        {{ apagar_pessoa.errors.id }}
+        <label>Nome</label>
+        {{ apagar_pessoa.pessoa_id() }}
+        {% if apagar_pessoa.errors.pessoa_id %}
+        {{ apagar_pessoa.errors.pessoa_id }}
         {% endif%}
     </div>
-    <button type="submit">Apagar Pessoa</button>
+    <button type="submit">Apagar Cadastro de Pessoa</button>
 </form>
 </p>
 <p><a href="{{ url_for('entrada') }}">Voltar para página inicial</a></p>

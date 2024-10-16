@@ -34,7 +34,7 @@
     <div class="form-group">
         <label>Filtrar por tarefa</label>
         <select id="selectLocal">
-            {% for tarefa in grupoTarefasAdmin %}
+            {% for tarefa in grupoTarefasAdminComMensagem %}
             <option>{{ tarefa[3] }}</option>
             {% endfor %}
         </select>
@@ -42,14 +42,14 @@
     <div class="form-group">
         <label>Filtrar por data</label>
         <select>
-            {% for tarefa in grupoTarefasAdmin %}
+            {% for tarefa in grupoTarefasAdminComMensagem %}
             <option>{{ tarefa[4] }}</option>
             {% endfor %}
         </select>
     </div>
 </p>
 
-    {% if grupoTarefasAdmin %}
+    {% if grupoTarefasAdminComMensagem %}
 <p><table>
     <thead>
         <tr>
@@ -63,15 +63,15 @@
         </tr>
     </thead>
     <tbody>
-        {% for tarefa in grupoTarefasAdmin %}
-        <tr id="{{ tarefa[3] }}" name="{{ tarefa[4] }}">
+        {% for tarefa in grupoTarefasAdminComMensagem %}
+        <tr>
             <td>{{ tarefa[0] }}</td>
             <td>{{ tarefa[1] }}</td>
             <td>{{ tarefa[2] }}</td>
             <td><a href="https://www.google.com/maps/search/?api=1&query={{ defLocal(tarefa[3]) }}" target=”_blank”>{{ tarefa[3] }}</a></td>
             <td>{{ tarefa[4] }}</td>
             <td>{{ tarefa[5] }}</td>
-            <td><a href="https://wa.me//{{ tarefa[6] }}?text={{ mensagem }}">Enviar lembrete</a></td>
+            <td><a href="https://wa.me//{{ tarefa[6] }}?text={{ tarefa[7] }}" target="_blank">Enviar lembrete</a></td>
         </tr>
         {% endfor %}
     </tbody>

@@ -1,9 +1,11 @@
 from app import app
-from flask import render_template, redirect, url_for, session, request
+from flask import render_template, redirect, url_for, session, request, send_file
 from jinja2 import Environment, FileSystemLoader
 from app.models.formulario import Login
 from app.models.cadastrar_pessoas import Cadastrar_pessoa, Apagar_pessoa, Atualizar_pessoa
-from app.models.cadastrar_tarefas import Cadastrar_tarefa, Apagar_tarefa, Alocar_pessoa, Atualizar_tarefa
+from app.models.cadastrar_tarefas import Cadastrar_tarefa, Apagar_tarefa, Alocar_pessoa, Atualizar_tarefa, Importar_tarefas
+import datetime
+import pandas as pd
 import mysql.connector
 
 def defLocal(localDb):
@@ -204,6 +206,8 @@ def cadastrar_tarefas():
     atualizar_tarefa = Atualizar_tarefa()
 
     apagar_tarefa = Apagar_tarefa()
+
+    importar_tarefas = Importar_tarefas()
     
     my_cursor_pessoas_tarefas_um = mydb.cursor()
     my_cursor_pessoas_tarefas_um.execute("SELECT tarefas FROM tarefas")
@@ -248,7 +252,6 @@ def cadastrar_tarefas():
         else:
             item = nome[0]
             apagar_tarefa.tarefa_id.choices.append(item)
-    print(apagar_tarefa.tarefa_id.choices)
 
     my_cursor_tarefas = mydb.cursor()
     my_cursor_tarefas.execute('SELECT tarefas.id, tarefas.tarefas, pessoas.Nome, tarefas.local, DATE_FORMAT (tarefas.data,"%d/%m/%Y"), tarefas.hora FROM tarefas, pessoas INNER JOIN pessoas_tarefas WHERE tarefas.id=pessoas_tarefas.tarefa_id AND pessoas.id=pessoas_tarefas.pessoa_id ORDER BY id')
@@ -257,7 +260,7 @@ def cadastrar_tarefas():
 
     mydb.close()
 
-    return render_template("cadastrar_tarefas.html", nome=session['nome'], cadastro_tarefa=cadastro_tarefa, pessoas_tarefas=pessoas_tarefas, apagar_tarefa=apagar_tarefa, grupoTarefas=grupoTarefas,  defLocal=defLocal, atualizar_tarefa=atualizar_tarefa)
+    return render_template("cadastrar_tarefas.html", nome=session['nome'], cadastro_tarefa=cadastro_tarefa, pessoas_tarefas=pessoas_tarefas, apagar_tarefa=apagar_tarefa, grupoTarefas=grupoTarefas,  defLocal=defLocal, atualizar_tarefa=atualizar_tarefa, importar_tarefas=importar_tarefas)
 
 @app.route("/cadastroTarefa", methods=["GET", "POST"])
 def cadastroTarefa():
@@ -269,18 +272,79 @@ def cadastroTarefa():
     tarefa = cadastro_tarefa.tarefa.data
     local = cadastro_tarefa.local.data
     data = cadastro_tarefa.data.data
+    dataFinal = cadastro_tarefa.dataFinal.data
+    segunda = cadastro_tarefa.segunda.data
+    terca = cadastro_tarefa.terca.data
+    quarta = cadastro_tarefa.quarta.data
+    quinta = cadastro_tarefa.quinta.data
+    sexta = cadastro_tarefa.sexta.data
+    sabado = cadastro_tarefa.sabado.data
+    domingo = cadastro_tarefa.domingo.data
     hora = cadastro_tarefa.hora.data
 
     my_cursor = mydb.cursor()
+    if dataFinal:
 
-    sql = f"INSERT INTO tarefas (tarefas,local,data,hora) VALUES ('{tarefa}','{local}','{data}','{hora}') ON DUPLICATE KEY UPDATE local = '{local}', data = '{data}', hora = '{hora}'"
+        while data <= dataFinal:
+            if (data.isoweekday() == 1 and segunda == True) or (data.isoweekday() == 2 and terca == True) or (data.isoweekday() == 3 and quarta == True) or (data.isoweekday() == 4 and quinta == True) or (data.isoweekday() == 5 and sexta == True) or (data.isoweekday() == 6 and sabado == True) or (data.isoweekday() == 7 and domingo == True):
+                tarefa = tarefa + " - " + str(data.strftime("%d-%m-%y"))
+                sql = f"INSERT INTO tarefas (tarefas,local,data,hora) VALUES ('{tarefa}','{local}','{data}','{hora}') ON DUPLICATE KEY UPDATE local = '{local}', data = '{data}', hora = '{hora}'"
+                my_cursor.execute(sql)
+                data = data + datetime.timedelta(days=1)
+            else:
+                data = data + datetime.timedelta(days=1)
+            tarefa = cadastro_tarefa.tarefa.data
+    else:
+        sql = f"INSERT INTO tarefas (tarefas,local,data,hora) VALUES ('{tarefa}','{local}','{data}','{hora}') ON DUPLICATE KEY UPDATE local = '{local}', data = '{data}', hora = '{hora}'"
+        my_cursor.execute(sql)
 
-    my_cursor.execute(sql)
     mydb.commit()
 
     mydb.close()
 
     return cadastrar_tarefas()
+
+@app.route("/importarTarefas", methods=["GET", "POST"])
+def importarTarefas():
+
+    importar_tarefas = Importar_tarefas()
+
+    mydb = mysql.connector.connect(host='localhost',user='root',password='Ihc741258_',database='pi_db')
+
+    my_cursor = mydb.cursor()
+
+    arquivo = request.files['arquivo']
+
+    try:
+        if arquivo.filename.endswith('.xlsx'):
+            df = pd.read_excel(arquivo)
+        elif arquivo.filename.endswith('.csv'):
+            df = pd.read_csv(arquivo)
+        else:
+            raise ValueError("Formatos: .xlsx, .csv")
+
+        for index, row in df.iterrows():
+            tarefa = row.iloc[0]
+            local = row.iloc[1]
+            data = row.iloc[2]
+            hora = row.iloc[3]
+
+            sql = f"INSERT INTO tarefas (tarefas,local,data,hora) VALUES ('{tarefa}','{local}','{data}','{hora}') ON DUPLICATE KEY UPDATE local = '{local}', data = '{data}', hora = '{hora}'"
+            my_cursor.execute(sql)
+    except Exception as e:
+        mydb.close()
+        return cadastrar_tarefas()
+        
+    mydb.commit()
+    mydb.close()
+
+    return cadastrar_tarefas()
+
+@app.route("/download")
+def download():
+
+    local = 'upload_modelos/modelo_tarefas.xlsx'
+    return send_file(local, as_attachment=True)
 
 @app.route("/pessoaTarefa", methods=["GET", "POST"])
 def pessoaTarefa():
@@ -295,7 +359,7 @@ def pessoaTarefa():
     my_cursor = mydb.cursor()
 
     if request.form["direcionar"] == "colocar":
-        sql = f"INSERT INTO pessoas_tarefas VALUES ((SELECT id FROM pessoas WHERE Nome = '{pessoa_id}'),(SELECT id FROM tarefas WHERE tarefas = '{tarefa_id}')) ON DUPLICATE KEY UPDATE pessoa_id = pessoa_id"
+        sql = f"INSERT INTO pessoas_tarefas VALUES ((SELECT id FROM pessoas WHERE Nome = '{pessoa_id}'),(SELECT id FROM tarefas WHERE tarefas = '{tarefa_id}'),CONCAT('Olá, Voluntário Ágape! Tudo bem? Este é um lembrete de que contamos com você na escala de ' '{tarefa_id}' ', no próximo dia ', DATE_FORMAT ((SELECT data FROM tarefas WHERE tarefas = '{tarefa_id}'),'%d/%m/%Y'), ', ', (SELECT hora FROM tarefas WHERE tarefas = '{tarefa_id}'), '. Agradecemos muito sua dedicação e participação! Local: ', (SELECT local FROM tarefas WHERE tarefas = '{tarefa_id}'))) ON DUPLICATE KEY UPDATE pessoa_id = pessoa_id, mensagem=CONCAT('Olá, Voluntário Ágape! Tudo bem? Este é um lembrete de que contamos com você na escala de ' '{tarefa_id}' ', no próximo dia ', DATE_FORMAT ((SELECT data FROM tarefas WHERE tarefas = '{tarefa_id}'),'%d/%m/%Y'), ', ', (SELECT hora FROM tarefas WHERE tarefas = '{tarefa_id}'), '. Agradecemos muito sua dedicação e participação! Local: ', (SELECT local FROM tarefas WHERE tarefas = '{tarefa_id}'))"
         my_cursor.execute(sql)
     elif request.form["direcionar"] == "tirar":
         sql = f"DELETE FROM pessoas_tarefas WHERE pessoa_id = (SELECT id FROM pessoas WHERE Nome = '{pessoa_id}') AND tarefa_id = (SELECT id FROM tarefas WHERE tarefas = '{tarefa_id}')"
@@ -377,7 +441,7 @@ def relatorio():
     grupoPessoas = my_cursor.fetchall()
 
     my_cursor_tarefas_admin = mydb.cursor()
-    my_cursor_tarefas_admin.execute('SELECT tarefas.id, tarefas.tarefas, pessoas.Nome, tarefas.local, DATE_FORMAT (tarefas.data,"%d/%m/%Y"), tarefas.hora, pessoas.Telefone FROM tarefas, pessoas INNER JOIN pessoas_tarefas WHERE tarefas.id=pessoas_tarefas.tarefa_id AND pessoas.id=pessoas_tarefas.pessoa_id')
+    my_cursor_tarefas_admin.execute('SELECT tarefas.id, tarefas.tarefas, pessoas.Nome, tarefas.local, DATE_FORMAT (tarefas.data,"%d/%m/%Y"), tarefas.hora, pessoas.Telefone, pessoas_tarefas.mensagem FROM tarefas, pessoas, pessoas_tarefas WHERE tarefas.id=pessoas_tarefas.tarefa_id AND pessoas.id=pessoas_tarefas.pessoa_id')
 
     grupoTarefasAdmin = my_cursor_tarefas_admin.fetchall()
 
@@ -389,18 +453,5 @@ def relatorio():
 
     mydb.close()
 
-    grupoTarefasAdminComMensagem = []
-
-    for tarefa in grupoTarefasAdmin:
-        mensagem = "Olá,%20Voluntário%20Ágape!%20Tudo%20bem?%20Este%20é%20um%20lembrete%20de%20que%20contamos%20com%20você%20na%20escala%20de%20" + str(tarefa[1]) + ",%20no%20próximo%20dia%20" + str(tarefa[4]) + ",%20" + str(tarefa[5]) + ".%20Agradecemos%20muito%20sua%20dedicação%20e%20participação!%20Local:%20" + str(tarefa[3])
-        if len(grupoTarefasAdmin) <= 0:
-            pass
-        else:
-            lista = list(tarefa)
-            lista.insert(7, mensagem)
-            lista.insert(8, mensagem)
-            tupla = tuple(lista)
-            grupoTarefasAdminComMensagem.append(tupla)
-
-    return render_template("relatorio.html", nome=session['nome'], admin=session['admin'], grupoPessoas=grupoPessoas, grupoTarefasAdminComMensagem=grupoTarefasAdminComMensagem, grupoTarefas=grupoTarefas, defLocal=defLocal)
+    return render_template("relatorio.html", nome=session['nome'], admin=session['admin'], grupoPessoas=grupoPessoas, grupoTarefasAdmin=grupoTarefasAdmin, grupoTarefas=grupoTarefas, defLocal=defLocal)
 

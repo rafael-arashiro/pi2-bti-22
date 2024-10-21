@@ -51,10 +51,56 @@
         {% endif%}
     </div>
     <div class="form-group">
-        <label>Data</label>
+        <label>Data Inicial</label>
         {{ cadastro_tarefa.data() }}
         {% if cadastro_tarefa.errors.data %}
         {{ cadastro_tarefa.errors.data }}
+        {% endif%}
+    </div>
+    <div class="form-group">
+        <label>Data Final</label>
+        {{ cadastro_tarefa.dataFinal() }}
+        {% if cadastro_tarefa.errors.dataFinal %}
+        {{ cadastro_tarefa.errors.dataFinal }}
+        {% endif%}
+    </div>
+    <div class="form-group">
+        <label>Dias da Semana:</label>
+        <br>
+        <label>Segunda</label>
+        {{ cadastro_tarefa.segunda() }}
+        {% if cadastro_tarefa.errors.segunda %}
+        {{ cadastro_tarefa.errors.segunda }}
+        {% endif%}
+        <label> | Terça</label>
+        {{ cadastro_tarefa.terca() }}
+        {% if cadastro_tarefa.errors.terca %}
+        {{ cadastro_tarefa.errors.terca }}
+        {% endif%}
+        <label> | Quarta</label>
+        {{ cadastro_tarefa.quarta() }}
+        {% if cadastro_tarefa.errors.quarta %}
+        {{ cadastro_tarefa.errors.quarta }}
+        {% endif%}
+        <label> | Quinta</label>
+        {{ cadastro_tarefa.quinta() }}
+        {% if cadastro_tarefa.errors.quinta %}
+        {{ cadastro_tarefa.errors.quinta }}
+        {% endif%}
+        <label> | Sexta</label>
+        {{ cadastro_tarefa.sexta() }}
+        {% if cadastro_tarefa.errors.sexta %}
+        {{ cadastro_tarefa.errors.sexta }}
+        {% endif%}
+        <label> | Sábado</label>
+        {{ cadastro_tarefa.sabado() }}
+        {% if cadastro_tarefa.errors.sabado %}
+        {{ cadastro_tarefa.errors.sabado }}
+        {% endif%}
+        <label> | Domingo</label>
+        {{ cadastro_tarefa.domingo() }}
+        {% if cadastro_tarefa.errors.domingo %}
+        {{ cadastro_tarefa.errors.domingo }}
         {% endif%}
     </div>
     <div class="form-group">
@@ -66,6 +112,20 @@
     </div>
 
     <button type="submit">Cadastrar Tarefa</button>
+</form>
+</p>
+
+<p>
+<form action="{{ url_for('importarTarefas') }}" method="POST" enctype="multipart/form-data">
+    {{ cadastro_tarefa.csrf_token }}
+    <div class="form-group">
+        <label><a href="{{ url_for('download') }}">Modelo de Arquivo</a></label>
+    </div>
+    <div class="form-group">
+        <label>Arquivo</label>
+        <input type="file" name="arquivo" accept="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel">
+    </div>
+    <button type="submit">Importar Tarefas</button>
 </form>
 </p>
 

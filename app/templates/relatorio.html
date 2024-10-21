@@ -34,7 +34,7 @@
     <div class="form-group">
         <label>Filtrar por tarefa</label>
         <select id="selectLocal">
-            {% for tarefa in grupoTarefasAdminComMensagem %}
+            {% for tarefa in grupoTarefasAdmin %}
             <option>{{ tarefa[3] }}</option>
             {% endfor %}
         </select>
@@ -42,14 +42,14 @@
     <div class="form-group">
         <label>Filtrar por data</label>
         <select>
-            {% for tarefa in grupoTarefasAdminComMensagem %}
+            {% for tarefa in grupoTarefasAdmin %}
             <option>{{ tarefa[4] }}</option>
             {% endfor %}
         </select>
     </div>
 </p>
 
-    {% if grupoTarefasAdminComMensagem %}
+    {% if grupoTarefasAdmin %}
 <p><table>
     <thead>
         <tr>
@@ -63,7 +63,7 @@
         </tr>
     </thead>
     <tbody>
-        {% for tarefa in grupoTarefasAdminComMensagem %}
+        {% for tarefa in grupoTarefasAdmin %}
         <tr>
             <td>{{ tarefa[0] }}</td>
             <td>{{ tarefa[1] }}</td>

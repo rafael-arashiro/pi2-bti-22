@@ -86,29 +86,20 @@ def cadastrar_pessoas():
     apagar_pessoa = Apagar_pessoa()
 
     cursor = mydb.cursor()
-    cursor.execute("SELECT Nome FROM pessoas")
+    cursor.execute("SELECT Nome FROM pessoas ORDER BY nome")
     listadenomes = cursor.fetchall()
     atualizar_pessoa.nome.choices = []
+    apagar_pessoa.nome.choices = []
     for nome in listadenomes:
         if len(listadenomes) <= 0:
             pass
         else:
             item = nome[0]
             atualizar_pessoa.nome.choices.append(item)
-
-    cursorDois = mydb.cursor()
-    cursorDois.execute("SELECT Nome FROM pessoas")
-    listadenomes = cursorDois.fetchall()
-    apagar_pessoa.pessoa_id.choices = []
-    for nome in listadenomes:
-        if len(listadenomes) <= 0:
-            pass
-        else:
-            item = nome[0]
-            apagar_pessoa.pessoa_id.choices.append(item)
+            apagar_pessoa.nome.choices.append(item)
 
     my_cursor = mydb.cursor()
-    my_cursor.execute('SELECT * FROM pessoas')
+    my_cursor.execute('SELECT * FROM pessoas ORDER BY nome')
 
     grupoPessoas = my_cursor.fetchall()
 
@@ -169,18 +160,18 @@ def apagarPessoa():
 
     apagar_pessoa = Apagar_pessoa()
 
-    pessoa_id = apagar_pessoa.pessoa_id.data
+    nome = apagar_pessoa.nome.data
 
     my_cursor_associado = mydb.cursor()
 
-    sql = f"DELETE FROM pessoas_tarefas WHERE pessoa_id = (SELECT id FROM pessoas WHERE Nome = '{pessoa_id}')"
+    sql = f"DELETE FROM pessoas_tarefas WHERE pessoa_id = (SELECT id FROM pessoas WHERE Nome = '{nome}')"
 
     my_cursor_associado.execute(sql)
     mydb.commit()
 
     my_cursor = mydb.cursor()
 
-    sql = f"DELETE FROM pessoas WHERE Nome='{pessoa_id}'"
+    sql = f"DELETE FROM pessoas WHERE Nome='{nome}'"
 
     my_cursor.execute(sql)
     mydb.commit()
@@ -210,7 +201,7 @@ def cadastrar_tarefas():
     importar_tarefas = Importar_tarefas()
     
     my_cursor_pessoas_tarefas_um = mydb.cursor()
-    my_cursor_pessoas_tarefas_um.execute("SELECT tarefas FROM tarefas")
+    my_cursor_pessoas_tarefas_um.execute("SELECT tarefas FROM tarefas ORDER BY tarefas")
     listadetarefas = my_cursor_pessoas_tarefas_um.fetchall()
     atualizar_tarefa.tarefa.choices = []
     for nome in listadetarefas:
@@ -221,7 +212,7 @@ def cadastrar_tarefas():
             atualizar_tarefa.tarefa.choices.append(item)
 
     cursor = mydb.cursor()
-    cursor.execute("SELECT Nome FROM pessoas")
+    cursor.execute("SELECT Nome FROM pessoas ORDER BY nome")
     listadenomes = cursor.fetchall()
     pessoas_tarefas.pessoa_id.choices = []
     for nome in listadenomes:
@@ -232,7 +223,7 @@ def cadastrar_tarefas():
             pessoas_tarefas.pessoa_id.choices.append(item)
 
     my_cursor_pessoas_tarefas_dois = mydb.cursor()
-    my_cursor_pessoas_tarefas_dois.execute("SELECT tarefas FROM tarefas")
+    my_cursor_pessoas_tarefas_dois.execute("SELECT tarefas FROM tarefas ORDER BY tarefas")
     listadetarefas = my_cursor_pessoas_tarefas_dois.fetchall()
     pessoas_tarefas.tarefa_id.choices = []
     for nome in listadetarefas:
@@ -243,7 +234,7 @@ def cadastrar_tarefas():
             pessoas_tarefas.tarefa_id.choices.append(item)
     
     my_cursor_pessoas_tarefas_tres = mydb.cursor()
-    my_cursor_pessoas_tarefas_tres.execute("SELECT tarefas FROM tarefas")
+    my_cursor_pessoas_tarefas_tres.execute("SELECT tarefas FROM tarefas ORDER BY tarefas")
     listadetarefas = my_cursor_pessoas_tarefas_tres.fetchall()
     apagar_tarefa.tarefa_id.choices = []
     for nome in listadetarefas:
@@ -254,7 +245,7 @@ def cadastrar_tarefas():
             apagar_tarefa.tarefa_id.choices.append(item)
 
     my_cursor_tarefas = mydb.cursor()
-    my_cursor_tarefas.execute('SELECT tarefas.id, tarefas.tarefas, pessoas.Nome, tarefas.local, DATE_FORMAT (tarefas.data,"%d/%m/%Y"), tarefas.hora FROM tarefas, pessoas INNER JOIN pessoas_tarefas WHERE tarefas.id=pessoas_tarefas.tarefa_id AND pessoas.id=pessoas_tarefas.pessoa_id ORDER BY id')
+    my_cursor_tarefas.execute('SELECT tarefas.id, tarefas.tarefas, pessoas.Nome, tarefas.local, DATE_FORMAT (tarefas.data,"%d/%m/%Y"), tarefas.hora FROM tarefas, pessoas INNER JOIN pessoas_tarefas WHERE tarefas.id=pessoas_tarefas.tarefa_id AND pessoas.id=pessoas_tarefas.pessoa_id ORDER BY data')
 
     grupoTarefas = my_cursor_tarefas.fetchall()
 
@@ -284,7 +275,6 @@ def cadastroTarefa():
 
     my_cursor = mydb.cursor()
     if dataFinal:
-
         while data <= dataFinal:
             if (data.isoweekday() == 1 and segunda == True) or (data.isoweekday() == 2 and terca == True) or (data.isoweekday() == 3 and quarta == True) or (data.isoweekday() == 4 and quinta == True) or (data.isoweekday() == 5 and sexta == True) or (data.isoweekday() == 6 and sabado == True) or (data.isoweekday() == 7 and domingo == True):
                 tarefa = tarefa + " - " + str(data.strftime("%d-%m-%y"))
@@ -436,12 +426,12 @@ def relatorio():
     mydb = mysql.connector.connect(host='localhost',user='root',password='Ihc741258_',database='pi_db')
 
     my_cursor = mydb.cursor()
-    my_cursor.execute('SELECT * FROM pessoas')
+    my_cursor.execute('SELECT * FROM pessoas ORDER BY nome')
 
     grupoPessoas = my_cursor.fetchall()
 
     my_cursor_tarefas_admin = mydb.cursor()
-    my_cursor_tarefas_admin.execute('SELECT tarefas.id, tarefas.tarefas, pessoas.Nome, tarefas.local, DATE_FORMAT (tarefas.data,"%d/%m/%Y"), tarefas.hora, pessoas.Telefone, pessoas_tarefas.mensagem FROM tarefas, pessoas, pessoas_tarefas WHERE tarefas.id=pessoas_tarefas.tarefa_id AND pessoas.id=pessoas_tarefas.pessoa_id')
+    my_cursor_tarefas_admin.execute('SELECT tarefas.id, tarefas.tarefas, pessoas.Nome, tarefas.local, DATE_FORMAT (tarefas.data,"%d/%m/%Y"), tarefas.hora, pessoas.Telefone, pessoas_tarefas.mensagem FROM tarefas, pessoas, pessoas_tarefas WHERE tarefas.id=pessoas_tarefas.tarefa_id AND pessoas.id=pessoas_tarefas.pessoa_id ORDER BY tarefas')
 
     grupoTarefasAdmin = my_cursor_tarefas_admin.fetchall()
 
@@ -453,5 +443,26 @@ def relatorio():
 
     mydb.close()
 
-    return render_template("relatorio.html", nome=session['nome'], admin=session['admin'], grupoPessoas=grupoPessoas, grupoTarefasAdmin=grupoTarefasAdmin, grupoTarefas=grupoTarefas, defLocal=defLocal)
+    listaTarefasUnicas = []
+    tarefasUnicas = []
+    for tarefas in grupoTarefasAdmin:
+        tarefasUnicas.append(tarefas[1])
+    listaTarefasUnicas = set(tarefasUnicas)
+    listaTarefasUnicas = sorted(listaTarefasUnicas)
+
+    listaDatasUnicas = []
+    datasUnicas = []
+    for data in grupoTarefasAdmin:
+        datasUnicas.append(data[4])
+    listaDatasUnicas = set(datasUnicas)
+    listaDatasUnicas = sorted(listaDatasUnicas)
+
+    listaNomesUnicos = []
+    nomesUnicos = []
+    for nome in grupoPessoas:
+        nomesUnicos.append(nome[1])
+    listaNomesUnicos = set(nomesUnicos)
+    listaNomesUnicos = sorted(listaNomesUnicos)
+
+    return render_template("relatorio.html", nome=session['nome'], admin=session['admin'], grupoPessoas=grupoPessoas, grupoTarefasAdmin=grupoTarefasAdmin, grupoTarefas=grupoTarefas, defLocal=defLocal, listaNomesUnicos=listaNomesUnicos, listaDatasUnicas=listaDatasUnicas, listaTarefasUnicas=listaTarefasUnicas)
 

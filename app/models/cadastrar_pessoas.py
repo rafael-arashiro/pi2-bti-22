@@ -15,4 +15,4 @@ class Atualizar_pessoa(FlaskForm):
     admin = BooleanField("admin")
 
 class Apagar_pessoa(FlaskForm):
-    pessoa_id = SelectField("pessoa_id", validators=[DataRequired()])
+    nome = SelectField("pessoa_id", validators=[DataRequired()])

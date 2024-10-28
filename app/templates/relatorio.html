@@ -32,22 +32,34 @@
     {% endif %}
 <p>
     <div class="form-group">
-        <label>Filtrar por tarefa</label>
-        <select id="selectLocal">
-            {% for tarefa in grupoTarefasAdmin %}
-            <option>{{ tarefa[3] }}</option>
+        <label>Filtrar por Tarefa:</label>
+        <select onchange="esconderLinhaTarefa(value)" name="selectTarefa">
+            <option value="todas">Todas</option>
+            {% for tarefa in listaTarefasUnicas %}
+            <option value="{{ tarefa }}">{{ tarefa }}</option>
             {% endfor %}
         </select>
     </div>
     <div class="form-group">
-        <label>Filtrar por data</label>
-        <select>
-            {% for tarefa in grupoTarefasAdmin %}
-            <option>{{ tarefa[4] }}</option>
+        <label>Filtrar por Data:</label>
+        <select onchange="esconderLinhaData(value)" name="selectData">
+            <option value="todas">Todas</option>
+            {% for data in listaDatasUnicas %}
+            <option value="{{ data }}">{{ data }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <div class="form-group">
+        <label>Filtrar por Nome:</label>
+        <select onchange="esconderLinhaNome(value)" name="selectNome">
+            <option value="todas">Todos</option>
+            {% for nome in listaNomesUnicos %}
+            <option value="{{ nome }}">{{ nome }}</option>
             {% endfor %}
         </select>
     </div>
 </p>
+
 
     {% if grupoTarefasAdmin %}
 <p><table>
@@ -62,11 +74,11 @@
             <th>Envio de mensagem</th>
         </tr>
     </thead>
-    <tbody>
+    <tbody id="tabelaAdmin">
         {% for tarefa in grupoTarefasAdmin %}
         <tr>
             <td>{{ tarefa[0] }}</td>
-            <td>{{ tarefa[1] }}</td>
+            <td id="tarefaValores">{{ tarefa[1] }}</td>
             <td>{{ tarefa[2] }}</td>
             <td><a href="https://www.google.com/maps/search/?api=1&query={{ defLocal(tarefa[3]) }}" target=”_blank”>{{ tarefa[3] }}</a></td>
             <td>{{ tarefa[4] }}</td>
@@ -111,6 +123,72 @@
 <p>Não há tarefas.</p>
     {% endif %}
 {% endif %}
+
+<script>
+    function esconderLinhaTarefa(valor){
+        var tabela = document.getElementById('tabelaAdmin');
+        var linhas = tabela.querySelectorAll('tr');
+        var i = 0;
+        var coluna;
+        for(i=0; i<linhas.length; i++){
+            var coluna = linhas[i].querySelector('td:nth-child(2)').textContent;
+
+            if (coluna != valor) {
+                linhas[i].style.display = 'none';
+            }
+
+            if (coluna === valor) {
+                linhas[i].style.display = '';
+            }
+
+            if (valor === "todas") {
+                linhas[i].style.display = '';
+            }
+        }
+    }
+    function esconderLinhaData(valor){
+        var tabela = document.getElementById('tabelaAdmin');
+        var linhas = tabela.querySelectorAll('tr');
+        var i = 0;
+        var coluna;
+        for(i=0; i<linhas.length; i++){
+            var coluna = linhas[i].querySelector('td:nth-child(5)').textContent;
+
+            if (coluna != valor) {
+                linhas[i].style.display = 'none';
+            }
+
+            if (coluna === valor) {
+                linhas[i].style.display = '';
+            }
+
+            if (valor === "todas") {
+                linhas[i].style.display = '';
+            }
+        }
+    }
+    function esconderLinhaNome(valor){
+        var tabela = document.getElementById('tabelaAdmin');
+        var linhas = tabela.querySelectorAll('tr');
+        var i = 0;
+        var coluna;
+        for(i=0; i<linhas.length; i++){
+            var coluna = linhas[i].querySelector('td:nth-child(3)').textContent;
+
+            if (coluna != valor) {
+                linhas[i].style.display = 'none';
+            }
+
+            if (coluna === valor) {
+                linhas[i].style.display = '';
+            }
+
+            if (valor === "todas") {
+                linhas[i].style.display = '';
+            }
+        }
+    }
+</script>
 
 <p><a href="{{ url_for('entrada') }}">Voltar para página inicial</a></p>
 {% endblock%}

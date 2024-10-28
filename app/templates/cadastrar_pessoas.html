@@ -102,9 +102,9 @@
     {{ apagar_pessoa.csrf_token }}
     <div class="form-group">
         <label>Nome</label>
-        {{ apagar_pessoa.pessoa_id() }}
-        {% if apagar_pessoa.errors.pessoa_id %}
-        {{ apagar_pessoa.errors.pessoa_id }}
+        {{ apagar_pessoa.nome() }}
+        {% if apagar_pessoa.errors.nome %}
+        {{ apagar_pessoa.errors.nome }}
         {% endif%}
     </div>
     <button type="submit">Apagar Cadastro de Pessoa</button>

@@ -6,7 +6,7 @@ class Cadastrar_tarefa(FlaskForm):
     tarefa = StringField("tarefa", validators=[DataRequired()])
     local = StringField("local")
     data = DateField("data", validators=[DataRequired()])
-    dataFinal = DateField("dataFinal", validators=[DataRequired()])
+    dataFinal = DateField("dataFinal")
     segunda = BooleanField("segunda")
     terca = BooleanField("terca")
     quarta = BooleanField("quarta")

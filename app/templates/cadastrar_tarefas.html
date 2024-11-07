@@ -3,9 +3,12 @@
 {% block content%}
 <p>Bem vindo(a), {{ nome }}.<p>
 <h2>Cadastro de Tarefas</h2>
-
+<p><a href="#tabela" class="menulink">Tabela</a> - <a href="#cadastrar" class="menulink">Cadastrar</a> - <a href="#importar" class="menulink">Importar</a> - <a href="#atualizar" class="menulink">Atualizar</a> - <a href="#atribuir" class="menulink">Atribuir</a> - <a href="#apagar" class="menulink">Apagar</a></p>
 {% if grupoTarefas %}
-<p><table>
+<p><table id="tabela">
+    <caption>
+        Tabela de Tarefas Atribuídas
+    </caption>
     <thead>
         <tr>
             <th>id</th>
@@ -34,7 +37,7 @@
 {% endif %}
 
 <p>
-<form action="{{ url_for('cadastroTarefa') }}" method="POST">
+<form id="cadastrar" action="{{ url_for('cadastroTarefa') }}" method="POST">
     {{ cadastro_tarefa.csrf_token }}
     <div class="form-group">
         <label>Tarefa</label>
@@ -116,7 +119,7 @@
 </p>
 
 <p>
-<form action="{{ url_for('importarTarefas') }}" method="POST" enctype="multipart/form-data">
+<form id="importar" action="{{ url_for('importarTarefas') }}" method="POST" enctype="multipart/form-data">
     {{ cadastro_tarefa.csrf_token }}
     <div class="form-group">
         <label><a href="{{ url_for('download') }}">Modelo de Arquivo</a></label>
@@ -130,7 +133,7 @@
 </p>
 
 <p>
-<form action="{{ url_for('atualizarTarefa') }}" method="POST">
+<form id="atualizar" action="{{ url_for('atualizarTarefa') }}" method="POST">
     {{ cadastro_tarefa.csrf_token }}
     <div class="form-group">
         <label>Tarefa</label>
@@ -166,7 +169,7 @@
 </p>
 
 <p>
-<form action="{{ url_for('pessoaTarefa') }}" method="POST">
+<form id="atribuir" action="{{ url_for('pessoaTarefa') }}" method="POST">
     {{ pessoas_tarefas.csrf_token }}
     <div class="form-group">
         <label>Nome</label>
@@ -188,7 +191,7 @@
 </form>
 </p>
 <p>
-<form action="{{ url_for('apagarTarefa') }}" method="POST">
+<form id="apagar" action="{{ url_for('apagarTarefa') }}" method="POST">
     {{ apagar_tarefa.csrf_token }}
     <div class="form-group">
         <label>Tarefa</label>

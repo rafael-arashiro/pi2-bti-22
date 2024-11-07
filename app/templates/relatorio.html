@@ -4,8 +4,12 @@
 <p>Bem vindo(a), {{ nome }}.<p>
 <h2>Relatórios</h2>
 {% if admin == True %}
+<p><a href="#usuarios" class="menulink">Usuários</a> - <a href="#tarefas" class="menulink">Tarefas</a></p>
     {% if grupoPessoas %}
-<p><table>
+<p><table id="usuarios">
+    <caption>
+        Relatório de Usuários
+    </caption>
     <thead>
         <tr>
             <th>id</th>
@@ -62,7 +66,10 @@
 
 
     {% if grupoTarefasAdmin %}
-<p><table>
+<p><table id="tarefas">
+    <caption>
+        Relatório de Tarefas
+    </caption>
     <thead>
         <tr>
             <th>id</th>
@@ -93,9 +100,12 @@
     {% endif %}
 
 {% else %}
-<p>Tarefas de {{ nome }}</p>
+<p><a href="#tarefasDois" class="menulink">Tarefas</a></p>
     {% if grupoTarefas %}
-<p><table>
+<p><table id="tarefasDois">
+    <caption>
+        Tarefas de {{ nome }}
+    </caption>
     <thead>
         <tr>
             <th>id</th>

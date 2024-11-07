@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
 {% block content%}
-<p>Bem vindo(a), {{ nome }}. <a href="{{ url_for('logout') }}">Fazer logout</a>.<p>
+<p>Bem vindo(a), {{ nome }}. <a href="{{ url_for('logout') }}">Fazer logout</a>. <a href="#menu" class="menulink">Menu</a>.<p>
 {% if admin == 1 %}
-<p><a href="{{ url_for('cadastrar_pessoas') }}">Cadasto de Pessoas</a></p>
+<p id="menu"><a href="{{ url_for('cadastrar_pessoas') }}">Cadasto de Pessoas</a></p>
 <p><a href="{{ url_for('cadastrar_tarefas') }}">Cadastro de Tarefas</a></p>
 <p><a href="{{ url_for('relatorio') }}">Relatórios</a></p>
 {% else %}

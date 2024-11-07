@@ -1,11 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content%}
-<p>Bem vindo(a), {{ nome }}.<p>
+<p>Bem vindo(a), {{ nome }}.</p>
 <h2>Cadastro de Pessoas</h2>
+<p><a href="#tabela" class="menulink">Tabela</a> - <a href="#cadastrar" class="menulink">Cadastrar</a> - <a href="#atualizar" class="menulink">Atualizar</a> - <a href="#apagar" class="menulink">Apagar</a></p>
 
 {% if grupoPessoas %}
-<p><table>
+<p><table id="tabela">
+    <caption>
+        Tabela de Usuários
+    </caption>
     <thead>
         <tr>
             <th>id</th>
@@ -32,7 +36,7 @@
 {% endif %}
 
 <p>
-<form action="{{ url_for('cadastroPessoa') }}" method="POST">
+<form id="cadastrar" action="{{ url_for('cadastroPessoa') }}" method="POST">
     {{ cadastro_pessoa.csrf_token }}
     <div class="form-group">
         <label>Nome</label>
@@ -65,7 +69,7 @@
 </p>
 
 <p>
-<form action="{{ url_for('atualizarPessoa') }}" method="POST">
+<form id="atualizar" action="{{ url_for('atualizarPessoa') }}" method="POST">
     {{ cadastro_pessoa.csrf_token }}
     <div class="form-group">
         <label>Nome</label>
@@ -98,7 +102,7 @@
 </p>
 
 <p>
-<form action="{{ url_for('apagarPessoa') }}" method="POST">
+<form id="apagar" action="{{ url_for('apagarPessoa') }}" method="POST">
     {{ apagar_pessoa.csrf_token }}
     <div class="form-group">
         <label>Nome</label>
